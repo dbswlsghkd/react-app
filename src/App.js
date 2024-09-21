@@ -1,4 +1,6 @@
 import './App.css';
+// 훅 은 리액트에서 제공하는 함수
+import { useState } from 'react';
 
 // 하나의 최상위 태그만 사용해야함
 function Headder(props) {
@@ -31,7 +33,7 @@ const Nav = (props) => {
                     href={'/read/' + t.id}
                     onClick={(event) => {
                         event.preventDefault();
-                        props.onChangeMode(event.target.id);
+                        props.onChangeMode(Number(event.target.id));
                     }}
                 >
                     {t.title}
@@ -56,27 +58,49 @@ const Article = (props) => {
 };
 
 const App = () => {
+    // const _mode = useState('WELCOME');
+    // console.log(_mode, '_mode');
+    // const mode = _mode[0];
+    // const setMode = _mode[1];
+
+    const [mode, setMode] = useState('WELCOME');
+    const [id, setId] = useState(null);
+
     const topics = [
         { id: 1, title: 'html', body: 'html is ...' },
         { id: 2, title: 'css', body: 'css is ...' },
         { id: 3, title: 'javascript', body: 'javascript is ...' },
     ];
+    let content = null;
+    if (mode === 'WELCOME') {
+        content = <Article title="Welcome" body="Hello, WEB"></Article>;
+    } else if (mode === 'READ') {
+        let title,
+            body = null;
+        for (let i = 0; i < topics.length; i++) {
+            if (topics[i].id === id) {
+                title = topics[i].title;
+                body = topics[i].body;
+            }
+        }
+        content = <Article title={title} body={body}></Article>;
+    }
     return (
         <div>
             <Headder
                 title="REACT"
                 onChangeMode={() => {
-                    alert('Header');
+                    setMode('WELCOME');
                 }}
             ></Headder>
             <Nav
                 topics={topics}
-                onChangeMode={(id) => {
-                    alert(id);
+                onChangeMode={(_id) => {
+                    setMode('READ');
+                    setId(_id);
                 }}
             ></Nav>
-            <Article title="Welcome" body="Hello, WEB"></Article>
-            <Article title="Hi" body="Hello, REACT"></Article>
+            {content}
         </div>
     );
 };
