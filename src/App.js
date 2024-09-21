@@ -2,11 +2,19 @@ import './App.css';
 
 // 하나의 최상위 태그만 사용해야함
 function Headder(props) {
-    console.log(props);
     return (
         <header>
-            <h1>{props.title}</h1>
-            world wide web!
+            <h1>
+                <a
+                    herf="/"
+                    onClick={(event) => {
+                        event.preventDefault();
+                        props.onChangeMode();
+                    }}
+                >
+                    {props.title}
+                </a>
+            </h1>
         </header>
     );
 }
@@ -18,7 +26,16 @@ const Nav = (props) => {
         let t = props.topics[i];
         lis.push(
             <li key={t.id}>
-                <a href={'/read/' + t.id}>{t.title}</a>
+                <a
+                    id={t.id}
+                    href={'/read/' + t.id}
+                    onClick={(event) => {
+                        event.preventDefault();
+                        props.onChangeMode(event.target.id);
+                    }}
+                >
+                    {t.title}
+                </a>
             </li>
         );
     }
@@ -46,8 +63,18 @@ const App = () => {
     ];
     return (
         <div>
-            <Headder title="REACT"></Headder>
-            <Nav topics={topics}></Nav>
+            <Headder
+                title="REACT"
+                onChangeMode={() => {
+                    alert('Header');
+                }}
+            ></Headder>
+            <Nav
+                topics={topics}
+                onChangeMode={(id) => {
+                    alert(id);
+                }}
+            ></Nav>
             <Article title="Welcome" body="Hello, WEB"></Article>
             <Article title="Hi" body="Hello, REACT"></Article>
         </div>
